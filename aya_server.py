@@ -63,7 +63,7 @@ def aya_bancah():
             response['response'] = {
                 'outputSpeech': {
                     'type': 'SSML',
-                    'ssml': f'<speak>Ouça o resumo: <audio src="{request.url_root}static/noticia.mp3"/></speak>'
+                    'ssml': '<speak>Ouça o resumo: <audio src="https://news-alexa-integration.onrender.com/static/noticia.mp3"/></speak>'
                 },
                 'shouldEndSession': True
             }
