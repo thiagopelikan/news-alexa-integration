@@ -43,17 +43,18 @@ def aya_bancah():
             print('Dispositivo suporta VideoApp ou tem tela (Viewports)', file=sys.stderr)
             # Echo Show: envia vídeo
             response['response'] = {
-                'directives': [{
-                    'type': 'VideoApp.Launch',
-                    'videoItem': {
-                        'source': request.url_root + 'static/noticia.mp4',
-                        'metadata': {
-                            'title': 'Resumo em vídeo',
-                            'subtitle': 'Notícia em vídeo para Echo Show'
+                'directives': [
+                    {
+                        'type': 'VideoApp.Launch',
+                        'videoItem': {
+                            'source': request.url_root + 'static/noticia.mp4',
+                            'metadata': {
+                                'title': 'Resumo em vídeo',
+                                'subtitle': 'Notícia em vídeo para Echo Show'
+                            }
                         }
                     }
-                }],
-                'shouldEndSession': True
+                ]
             }
             return jsonify(response)
         elif 'AudioPlayer' in device:
