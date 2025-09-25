@@ -59,11 +59,11 @@ def aya_bancah():
             return jsonify(response)
         elif 'AudioPlayer' in device:
             print('Dispositivo suporta AudioPlayer', file=sys.stderr)
-            # Echo comum: envia áudio
+            # Echo comum: envia áudio convertido
             response['response'] = {
                 'outputSpeech': {
                     'type': 'SSML',
-                    'ssml': '<speak>Ouça o resumo: <audio src="https://news-alexa-integration.onrender.com/static/noticia.mp3"/></speak>'
+                    'ssml': '<speak>Ouça o resumo: <audio src="https://news-alexa-integration.onrender.com/static/noticia_alexa.mp3"/></speak>'
                 },
                 'shouldEndSession': True
             }
