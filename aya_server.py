@@ -9,8 +9,11 @@ def static_files(filename):
 
 @app.route('/alexa/tool/aya_bancah', methods=['POST'])
 def aya_bancah():
+    import sys
     data = request.get_json()
     response = {}
+    print('--- RECEIVED REQUEST ---', file=sys.stderr)
+    print(data, file=sys.stderr)
     # Boas-vindas
     if data.get('request', {}).get('type') == 'LaunchRequest':
         response['response'] = {
@@ -26,10 +29,14 @@ def aya_bancah():
     intent = data.get('request', {}).get('intent', {})
     query = intent.get('slots', {}).get('query', {}).get('value', '').lower()
     device = data.get('context', {}).get('System', {}).get('device', {}).get('supportedInterfaces', {})
+    print(f'Query: {query}', file=sys.stderr)
+    print(f'Device supportedInterfaces: {device}', file=sys.stderr)
 
     # Se mencionou 'resumo' nas palavras ditas
     if 'resumo' in query:
+        print('Palavra "resumo" encontrada no query', file=sys.stderr)
         if 'VideoApp' in device:
+            print('Dispositivo suporta VideoApp', file=sys.stderr)
             # Echo Show: envia vídeo
             response['response'] = {
                 'directives': [{
@@ -46,6 +53,7 @@ def aya_bancah():
             }
             return jsonify(response)
         elif 'AudioPlayer' in device:
+            print('Dispositivo suporta AudioPlayer', file=sys.stderr)
             # Echo comum: envia áudio
             response['response'] = {
                 'outputSpeech': {
@@ -56,6 +64,7 @@ def aya_bancah():
             }
             return jsonify(response)
         else:
+            print('Dispositivo NÃO suporta VideoApp nem AudioPlayer, enviando texto', file=sys.stderr)
             # Nenhum suporte a vídeo/áudio: retorna transcrição
             texto_resumo = (
                 'Dembélé. Ousmane Dembélé foi eleito o melhor jogador do mundo da temporada ao conquistar a Bola de Ouro na segunda-feira, '
@@ -77,6 +86,7 @@ def aya_bancah():
             return jsonify(response)
 
     # Fallback padrão para outros casos
+    print('Fallback padrão acionado', file=sys.stderr)
     response['response'] = {
         'outputSpeech': {
             'type': 'PlainText',
