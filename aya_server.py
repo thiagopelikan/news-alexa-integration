@@ -29,14 +29,18 @@ def aya_bancah():
     intent = data.get('request', {}).get('intent', {})
     query = intent.get('slots', {}).get('query', {}).get('value', '').lower()
     device = data.get('context', {}).get('System', {}).get('device', {}).get('supportedInterfaces', {})
+    viewports = data.get('context', {}).get('Viewports', [])
+    has_screen = any(v.get('type') == 'APL' or v.get('type') == 'Alexa.Presentation.APL' for v in viewports)
+    print(f'Viewports: {viewports}', file=sys.stderr)
+    print(f'Has screen: {has_screen}', file=sys.stderr)
     print(f'Query: {query}', file=sys.stderr)
     print(f'Device supportedInterfaces: {device}', file=sys.stderr)
 
     # Se mencionou 'resumo' nas palavras ditas
     if 'resumo' in query:
         print('Palavra "resumo" encontrada no query', file=sys.stderr)
-        if 'VideoApp' in device:
-            print('Dispositivo suporta VideoApp', file=sys.stderr)
+        if 'VideoApp' in device or has_screen:
+            print('Dispositivo suporta VideoApp ou tem tela (Viewports)', file=sys.stderr)
             # Echo Show: envia vídeo
             response['response'] = {
                 'directives': [{
