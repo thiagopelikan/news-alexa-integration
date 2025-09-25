@@ -45,7 +45,7 @@ def aya_bancah():
                 'shouldEndSession': True
             }
             return jsonify(response)
-        elif device:
+        elif 'AudioPlayer' in device:
             # Echo comum: envia áudio
             response['response'] = {
                 'outputSpeech': {
