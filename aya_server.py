@@ -47,7 +47,7 @@ def aya_bancah():
                     {
                         'type': 'VideoApp.Launch',
                         'videoItem': {
-                            'source': request.url_root + 'static/noticia.mp4',
+                            'source': 'https://news-alexa-integration.onrender.com/static/noticia.mp4',
                             'metadata': {
                                 'title': 'Resumo em vídeo',
                                 'subtitle': 'Notícia em vídeo para Echo Show'
