@@ -16,7 +16,7 @@ def aya_bancah():
         response['response'] = {
             'outputSpeech': {
                 'type': 'PlainText',
-                'text': 'Bem-vindo à AYA Bancah! Me diga em poucas palavras quais notícias você gostaria de ouvir.'
+                'text': 'Bem-vindo à AYA Bancah! Me diga em poucas palavras quais notícias gostaria de ouvir.'
             },
             'shouldEndSession': False
         }
@@ -24,11 +24,11 @@ def aya_bancah():
 
     # Intents
     intent = data.get('request', {}).get('intent', {})
-    palavra = intent.get('slots', {}).get('palavra', {}).get('value', '').lower()
+    query = intent.get('slots', {}).get('query', {}).get('value', '').lower()
     device = data.get('context', {}).get('System', {}).get('device', {}).get('supportedInterfaces', {})
 
-    # Se pediu resumo
-    if palavra == 'resumo':
+    # Se mencionou 'resumo' nas palavras ditas
+    if 'resumo' in query:
         if 'VideoApp' in device:
             # Echo Show: envia vídeo
             response['response'] = {
@@ -44,7 +44,8 @@ def aya_bancah():
                 }],
                 'shouldEndSession': True
             }
-        else:
+            return jsonify(response)
+        elif device:
             # Echo comum: envia áudio
             response['response'] = {
                 'outputSpeech': {
@@ -53,9 +54,29 @@ def aya_bancah():
                 },
                 'shouldEndSession': True
             }
-        return jsonify(response)
+            return jsonify(response)
+        else:
+            # Nenhum suporte a vídeo/áudio: retorna transcrição
+            texto_resumo = (
+                'Dembélé. Ousmane Dembélé foi eleito o melhor jogador do mundo da temporada ao conquistar a Bola de Ouro na segunda-feira, '
+                'em uma noite de triunfo para seu clube, o Paris Saint-Germain. Aitana Bommati. '
+                'Aitana Bommati, do Barcelona, vencedora em série de troféus, levou o Prêmio Feminino. '
+                'Dembélé, atacante francês de 28 anos, precisou de tempo e da orientação do técnico do PSG, Luiz Henrique, para alcançar seu potencial. '
+                'Na temporada passada, ele foi o destaque do clube da capital francesa, rumo ao seu primeiro título da Liga dos Campeões. '
+                'Dembélé se tornou o sexto francês a erguer o Prêmio. '
+                'Ele superou o espanhol e atacante do Barcelona, Lamine Yamal, com seu companheiro de PSG, Vitinha, ficando em terceiro lugar. '
+                'A espanhola Bommati, eleita jogadora da temporada na Liga dos Campeões, conquistou a Bola de Ouro pela terceira vez consecutiva.'
+            )
+            response['response'] = {
+                'outputSpeech': {
+                    'type': 'PlainText',
+                    'text': texto_resumo
+                },
+                'shouldEndSession': True
+            }
+            return jsonify(response)
 
-    # Fallback
+    # Fallback padrão para outros casos
     response['response'] = {
         'outputSpeech': {
             'type': 'PlainText',
